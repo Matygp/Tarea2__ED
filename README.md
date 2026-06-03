@@ -33,6 +33,8 @@ Para variable rutaCarpeta que encontrara en el main asegurarse de colocar la rut
 
 "C:\\Users\\matia\\OneDrive\\Desktop\\Tarea2__ED\\books_xml\\books_xml"
 
+Tiene que estar dentro de la carpeta books_xml para que el programa funcione correctamente, y luego ejecute:
+
 ```bash
 g++ main.cpp tinyxml2.cpp -o tarea2_ed
 ```
