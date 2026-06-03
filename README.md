@@ -27,3 +27,11 @@ El sistema es capaz de construir dinámicamente el árbol en memoria principal, 
 ---
 
 ## Compilación y ejecución
+#### compilar:
+```bash
+g++ main.cpp tinyxml2.cpp -o tarea2_ed
+```
+#### ejecutar:
+```bash
+./tarea2_ed
+
