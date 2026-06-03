@@ -28,6 +28,11 @@ El sistema es capaz de construir dinámicamente el árbol en memoria principal, 
 
 ## Compilación y ejecución
 #### compilar:
+
+Para variable rutaCarpeta que encontrara en el main asegurarse de colocar la ruta a la carpeta de books_xml que esta en su sistema, por ejemplo en nuestro caso: 
+
+"C:\\Users\\matia\\OneDrive\\Desktop\\Tarea2__ED\\books_xml\\books_xml"
+
 ```bash
 g++ main.cpp tinyxml2.cpp -o tarea2_ed
 ```

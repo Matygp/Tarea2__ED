@@ -104,7 +104,75 @@ BookData procesarArchivoXML(const std::string& rutaArchivo) {
     return libro;
 }
 
+int main() {
+    GeneralTree miArbol;
+    
+    //Ruta absoluta del sistema de archivos en Windows (Asegurarse de colocar la ruta que esta en su sistema, no es igual para todos)
+    std::string rutaCarpeta = "C:\\Users\\matia\\OneDrive\\Desktop\\Tarea2__ED\\books_xml\\books_xml"; 
 
-int main(){
+    std::vector<TreeNode*> todosLosNodos;
 
+    // Escaneamos los archivos
+    if (fs::exists(rutaCarpeta) && fs::is_directory(rutaCarpeta)) {
+        for (const auto& entry : fs::directory_iterator(rutaCarpeta)) {
+            std::string ext = entry.path().extension().string();
+            std::transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+
+            if (ext == ".xml") {
+                BookData data = procesarArchivoXML(entry.path().string());
+                
+                if (!data.id.empty()) {
+                    TreeNode* nuevoNodo = new TreeNode(data);
+                    todosLosNodos.push_back(nuevoNodo);
+                }
+            }
+        }
+    } else {
+        std::cerr << "No se pudo acceder a la ruta especificada, revise las carpetas." << std::endl;
+        return 1;
+    }
+
+    // Construimos el arbol general
+    if (!todosLosNodos.empty()) {
+        TreeNode* raiz = todosLosNodos[0]; // El primer libro de la lista actúa como raíz
+        
+        // Enlazamos jerárquicamente el resto de los 9,999 libros como sus hijos directos
+        for (size_t i = 1; i < todosLosNodos.size(); ++i) {
+            raiz->children.push_back(todosLosNodos[i]);
+        }
+        
+        miArbol.setRoot(raiz);
+        std::cout << "Arbol construido correctamente, se cargaron " << todosLosNodos.size() << " libros." << std::endl;
+    } else {
+        std::cout << "No se encontraron archivos XML procesables." << std::endl;
+        return 0;
+
+    }
+
+    // Llamamos a la función listar()
+    std::cout << "Listado completo de IDs:" << std::endl;
+    miArbol.listar(); // Imprime la lista que ya viste en pantalla
+    std::cout << "Presione la tecla ENTER para proceder con la poda por rating" << std::endl;
+    std::cin.get(); // Se utiliza para que el sistema espere a apretar ENTER para asi continuar con las demas funciones
+    //Esto se utilizo dado que si se ejecutaba sin esto al ser un gran volumen de datos se llenaba el buffer de mi computadora 
+    //y se terminaba la ejecución sin realizar las demas funciones
+
+    // Llamamos a la función borrar_ratings(r)
+    double ratingCorte = 1.6; // Le damos el rating para eliminar los libros
+    std::cout << "Eliminando recursivamente nodos con calificacion menor o igual a " << ratingCorte <<std::endl;
+    miArbol.borrar_ratings(ratingCorte); // Poda y libera la memoria dinámica de los descartados
+    std::cout << "\n Presione la tecla ENTER para ver el listado final de verificacion" << std::endl;
+    std::cin.get();
+
+    // Verificamos que se halla realizado bien  la poda
+    std::cout << "Lista despues de la poda:"<<std::endl;
+    miArbol.listar(); // Muestra el árbol limpio, verificando el éxito del borrado
+    std::cout << "\n Presione la tecla ENTER para continuar con precursores" << std::endl;
+    std::cin.get();
+
+    //Llamamos a la función precursores()
+    std::cout << "IDs de libros cuyos libros similares son todos de anos posteriores:" << std::endl;
+    miArbol.precursores(); // Procesa y filtra las colecciones de libros similares
+
+    return 0;
 }

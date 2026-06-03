@@ -144,6 +144,12 @@ public:
             findPrecursors(this->root);
         }
     }
+
+    //Asigna la dirección del nodo raíz principal. Útil tras procesar los 10.000 XML.
+     
+    void setRoot(TreeNode* newRoot) { 
+        this->root = newRoot; 
+    }
 };
 
 #endif 
