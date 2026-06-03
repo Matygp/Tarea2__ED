@@ -64,6 +64,29 @@ private:
             preOrderList(child);
         }
     }
+
+    //Función para eliminar y liberar memoria de los nodos del árbol
+    TreeNode* pruneRatings(TreeNode* node, double r) {
+        if (node == nullptr) return nullptr;
+        
+        //Primero, filtrar los hijos de abajo hacia arriba (postorden)
+        std::vector<TreeNode*> validChildren;
+        for (TreeNode* child : node->children) {
+            TreeNode* processedChild = pruneRatings(child, r);
+            if (processedChild != nullptr) {
+                validChildren.push_back(processedChild);
+            }
+        }
+        node->children = validChildren;
+
+        //Luego, evaluar el nodo actual tras limpiar su descendencia
+        if (node->data.averageRating <= r) {
+            delete node; //Llama al destructor del nodo (libera memoria)
+            return nullptr;
+        }
+        return node;
+    }
+
 public:
    
     // Constructor por defecto
@@ -80,6 +103,11 @@ public:
         if (this->root != nullptr) {
             preOrderList(this->root);
         }
+    }
+
+    //Llama a función privada pruneRatings pasándole la raíz del árbol
+    void borrar_ratings(double r) {
+        this->root = pruneRatings(this->root, r);
     }
 };
 
