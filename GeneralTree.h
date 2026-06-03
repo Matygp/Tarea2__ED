@@ -87,6 +87,34 @@ private:
         return node;
     }
 
+    //Función recorre arbol en preorder y busca los libros "precursores" (fecha de publicacion < libros similares)
+    void findPrecursors(TreeNode* node) {
+        if (node == nullptr) return;
+
+        //Supone que es precursor si tiene al menos un libro similar
+        bool isPrecursor = !node->data.similarBooks.empty();
+        
+        //Valida la condición sobre la colección de libros similares
+        for (const SimilarBook& similar : node->data.similarBooks) {
+            // Si encuentra uno publicado en el mismo año o antes, no es precursor
+            if (similar.publicationYear <= node->data.publicationYear) {
+                isPrecursor = false;
+                break;
+            }
+        }
+
+        //Si cumple la condición (todos los similares son posteriores), se imprime
+        if (isPrecursor) {
+            std::cout << node->data.id << std::endl;
+        }
+
+        //Continuar el recorrido por el árbol general
+        for (TreeNode* child : node->children) {
+            findPrecursors(child);
+        }
+    }
+
+
 public:
    
     // Constructor por defecto
@@ -108,6 +136,13 @@ public:
     //Llama a función privada pruneRatings pasándole la raíz del árbol
     void borrar_ratings(double r) {
         this->root = pruneRatings(this->root, r);
+    }
+
+    //Inicia el recorrido recursivo con findPrecursors desde la raíz
+    void precursores() {
+        if (this->root != nullptr) {
+            findPrecursors(this->root);
+        }
     }
 };
 
